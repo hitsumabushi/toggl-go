@@ -1,0 +1,50 @@
+.*.swp
+*~
+.*~
+# IntelliJ
+.idea
+*.iml
+
+# generated files
+**.aux
+**.bak
+**.dvi
+**.elc
+**.eps
+**.fdb_latexmk
+**.htm
+**.la
+**.lo
+**.log
+**.mod
+**.o
+**.out
+**.output
+**.pdf
+**.ps
+**.pyc
+**.rej
+**.sw[po]
+**.tmp
+**.toc
+**/.#*
+
+# temporary files
+CVS
+Thumbs.db
+auto
+autom4te.cache
+tags
+.DS_Store
+.pc
+.project
+.~lock*
+.secret
+
+# languages
+.python-version
+.pip
+vendor
+Godeps
+
+
