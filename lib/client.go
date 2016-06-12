@@ -3,7 +3,6 @@ package client
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -11,17 +10,17 @@ import (
 )
 
 const (
-	ENDPOINT_WORKSPACES      = "https://www.toggl.com/api/v8/workspaces"
-	ENDPOINT_CLIENTS         = "https://www.toggl.com/api/v8/clients"
-	ENDPOINT_REPORT_WEEKLY   = "https://toggl.com/reports/api/v2/weekly"
-	ENDPOINT_REPORT_DETAILED = "https://toggl.com/reports/api/v2/details"
-	ENDPOINT_REPORT_SUMMARY  = "https://toggl.com/reports/api/v2/summary"
-	ENDPOINT_START_TIME      = "https://www.toggl.com/api/v8/time_entries/start"
+	endpointWorkspaces     = "https://www.toggl.com/api/v8/workspaces"
+	endpointClients        = "https://www.toggl.com/api/v8/clients"
+	endpointReportWeekly   = "https://toggl.com/reports/api/v2/weekly"
+	endpointReportDetailed = "https://toggl.com/reports/api/v2/details"
+	endpointReportSummary  = "https://toggl.com/reports/api/v2/summary"
+	endpointStartTime      = "https://www.toggl.com/api/v8/time_entries/start"
 
-	// API_SECRET is specified from toggl
-	API_SECRET        = "api_token"
-	CONTENT_TYPE_JSON = "application/json"
-	USER_AGENT        = "toggl-go/0.1"
+	// APISecret is specified from toggl
+	apiSecret       = "api_token"
+	contentTypeJSON = "application/json"
+	userAgent       = "toggl-go/0.1"
 )
 
 // APIKey store API token
@@ -33,19 +32,21 @@ type APIKey struct {
 // Resources is slice of endpoint
 type Resources map[string]Endpoint
 
+// AddEndpoint is the method for add an API endpoint.
 func (r *Resources) AddEndpoint(name string, endpoint Endpoint) error {
 	_, ok := (*r)[name]
 	if ok {
-		return errors.New(fmt.Sprintf("%s is already used.\n", name))
+		return fmt.Errorf("%s is already used.\n", name)
 	}
 	(*r)[name] = endpoint
 	return nil
 }
 
+// GetURL return API endpoint url.URL of given name
 func (r *Resources) GetURL(name string) (*url.URL, error) {
 	endpoint, ok := (*r)[name]
 	if !ok {
-		return nil, errors.New(fmt.Sprintf("%s is not registered as a resource.\n", name))
+		return nil, fmt.Errorf("%s is not registered as a resource.\n", name)
 	}
 	return endpoint.URL(), nil
 }
@@ -64,13 +65,13 @@ type Client struct {
 	userAgent   string
 }
 
-// NewClient return Client if not return error
+// NewClient return a Client instance if not return error
 func NewClient(apiKey *APIKey, resources *Resources) (*Client, error) {
 	return &Client{
 		resources:   resources,
 		apiKey:      apiKey,
-		contentType: CONTENT_TYPE_JSON,
-		userAgent:   USER_AGENT,
+		contentType: contentTypeJSON,
+		userAgent:   userAgent,
 	}, nil
 }
 
